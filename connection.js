@@ -41,6 +41,7 @@ class WAConnection {
       await new Promise(r => setTimeout(r, 3000))
       const code = await this.sock.requestPairingCode(number)
       console.log(`\n🔑 Pairing Code: ${code}\n`)
+      setTimeout(() => process.exit(0), 30000) // restart otomatis 30 detik setelah pairing
     }
 
     // Handle koneksi
