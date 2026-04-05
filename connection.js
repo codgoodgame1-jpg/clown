@@ -74,8 +74,8 @@ class WAConnection {
 
       // Filter pesan lama — hanya proses pesan setelah bot start
       const msg = data.messages[0]
-      const msgTimestamp = msg?.messageTimestamp
-      if (msgTimestamp && msgTimestamp < this.startTime) return
+      // const msgTimestamp = msg?.messageTimestamp
+      // if (msgTimestamp && msgTimestamp < this.startTime) return
 
       if (this.onMessage) this.onMessage(data)
     })
