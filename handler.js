@@ -23,59 +23,60 @@ const loadPlugins = () => {
 }
 
 const handleMessage = async (sock, { messages }) => {
-  const msg = messages[0]
-  if (!msg.message || msg.key.fromMe) return
-  if (!sock?.user) return
-
-  // Baca settings fresh setiap pesan (biar perubahan on/off langsung efek)
-  const settings = getSettings()
-
-  // Cek bot aktif atau tidak
-  if (!settings.botActive) return
-
-  const sender = msg.key.participant || msg.key.remoteJid
-  const remoteJid = msg.key.remoteJid
-  const isGroup = remoteJid.endsWith('@g.us')
-
-  const text =
-    msg.message?.conversation ||
-    msg.message?.extendedTextMessage?.text ||
-    msg.message?.imageMessage?.caption ||
-    msg.message?.videoMessage?.caption ||
-    ''
-
-  if (!text) return
-
-  const senderNum = sender.replace('@s.whatsapp.net', '').replace('@g.us', '')
-  const location = isGroup ? `[GC: ${remoteJid.replace('@g.us', '')}]` : '[DM]'
-  console.log(`📨 ${location} ${senderNum}: ${text}`)
-
-  const prefix = config.prefix
-  if (!text.startsWith(prefix)) return
-
-  const [rawCmd, ...args] = text.slice(prefix.length).trim().split(/\s+/)
-  const cmd = rawCmd.toLowerCase()
-
-  const plugin = plugins.find(p => p.usage === cmd || p.usage === `${prefix}${cmd}`)
-  if (!plugin) return
-
-  console.log(`⚡ Command: ${prefix}${cmd} | By: ${senderNum}`)
-
-  msg.reply = (text) => sock.sendMessage(remoteJid, { text }, { quoted: msg })
-
-  const ownerList = settings.ownerNumber || config.ownerNumber
-  const isOwner = ownerList.includes(sender.replace(/[^0-9]/g, ''))
-
-  if (plugin.isOwner && !isOwner) {
-    return msg.reply('⛔ Command ini hanya bisa digunakan oleh owner!')
-  }
-
   try {
+    const msg = messages[0]
+    if (!msg || !msg.message || msg.key.fromMe) return
+
+    const settings = getSettings()
+    if (!settings.botActive) return
+
+    const sender = msg.key.participant || msg.key.remoteJid
+    const remoteJid = msg.key.remoteJid
+    const isGroup = remoteJid.endsWith('@g.us')
+
+    const text =
+      msg.message?.conversation ||
+      msg.message?.extendedTextMessage?.text ||
+      msg.message?.imageMessage?.caption ||
+      msg.message?.videoMessage?.caption ||
+      ''
+
+    if (!text) return
+
+    const senderNum = sender.replace('@s.whatsapp.net', '').replace('@g.us', '')
+    const location = isGroup ? `[GC]` : '[DM]'
+    console.log(`📨 ${location} ${senderNum}: ${text}`)
+
+    const prefix = config.prefix
+    if (!text.startsWith(prefix)) return
+
+    const [rawCmd, ...args] = text.slice(prefix.length).trim().split(/\s+/)
+    const cmd = rawCmd.toLowerCase()
+
+    console.log(`🔍 CMD: ${cmd}`)
+
+    const plugin = plugins.find(p => p.usage === cmd)
+    if (!plugin) {
+      console.log(`⚠️ Plugin tidak ditemukan: ${cmd}`)
+      return
+    }
+
+    console.log(`⚡ Menjalankan plugin: ${plugin.name}`)
+
+    msg.reply = (text) => sock.sendMessage(remoteJid, { text }, { quoted: msg })
+
+    const ownerList = settings.ownerNumber || config.ownerNumber
+    const isOwner = ownerList.includes(sender.replace(/[^0-9]/g, ''))
+
+    if (plugin.isOwner && !isOwner) {
+      return msg.reply('⛔ Command ini hanya bisa digunakan oleh owner!')
+    }
+
     await plugin.run(sock, msg, args, { isOwner, isGroup, sender, remoteJid, settings, config })
     console.log(`✅ Plugin ${plugin.name} selesai`)
+
   } catch (err) {
-    console.error(`❌ Error plugin ${plugin.name}:`, err.message)
-    msg.reply(`❌ Error: ${err.message}`)
+    console.error(`❌ handleMessage error:`, err.message)
   }
 }
 
