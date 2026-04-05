@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.0",
     "@hapi/boom": "^10.0.1",
@@ -14,7 +17,7 @@
     "ffmpeg-static": "^5.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "yt-dlp-wrap": "^2.3.12",
-    "canvas": "^2.11.2",
+    "@napi-rs/canvas": "^0.1.44",
     "sharp": "^0.33.0"
   }
 }
