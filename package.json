@@ -18,6 +18,9 @@
     "fluent-ffmpeg": "^2.1.2",
     "yt-dlp-wrap": "^2.3.12",
     "@napi-rs/canvas": "^0.1.44",
-    "sharp": "^0.33.0"
+    "sharp": "^0.32.6"
+  },
+  "overrides": {
+    "sharp": "^0.32.6"
   }
 }
