@@ -1,0 +1,20 @@
+{
+  "name": "bot-wa",
+  "version": "1.0.0",
+  "description": "Bot WhatsApp moderator dengan Baileys",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.0",
+    "@hapi/boom": "^10.0.1",
+    "pino": "^8.0.0",
+    "axios": "^1.6.0",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "yt-dlp-wrap": "^2.3.12",
+    "canvas": "^2.11.2",
+    "sharp": "^0.33.0"
+  }
+}
