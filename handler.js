@@ -23,6 +23,7 @@ const loadPlugins = () => {
 }
 
 const handleMessage = async (sock, { messages }) => {
+  console.log('🔔 handleMessage dipanggil! messages:', messages.length)
   try {
     const msg = messages[0]
     if (!msg || !msg.message || msg.key.fromMe) return
